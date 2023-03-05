@@ -241,63 +241,6 @@ namespace ddspp
 		P8                          = 113,
 		A8P8                        = 114,
 		B4G4R4A4_UNORM              = 115,
-		
-		P208                        = 130,
-		V208                        = 131,
-		V408                        = 132,
-		ASTC_4X4_TYPELESS           = 133,
-		ASTC_4X4_UNORM              = 134,
-		ASTC_4X4_UNORM_SRGB         = 135,
-		ASTC_5X4_TYPELESS           = 137,
-		ASTC_5X4_UNORM              = 138,
-		ASTC_5X4_UNORM_SRGB         = 139,
-		ASTC_5X5_TYPELESS           = 141,
-		ASTC_5X5_UNORM              = 142,
-		ASTC_5X5_UNORM_SRGB         = 143,
-
-		ASTC_6X5_TYPELESS           = 145,
-		ASTC_6X5_UNORM              = 146,
-		ASTC_6X5_UNORM_SRGB         = 147,
-
-		ASTC_6X6_TYPELESS           = 149,
-		ASTC_6X6_UNORM              = 150,
-		ASTC_6X6_UNORM_SRGB         = 151,
-
-		ASTC_8X5_TYPELESS           = 153,
-		ASTC_8X5_UNORM              = 154,
-		ASTC_8X5_UNORM_SRGB         = 155,
-
-		ASTC_8X6_TYPELESS           = 157,
-		ASTC_8X6_UNORM              = 158,
-		ASTC_8X6_UNORM_SRGB         = 159,
-
-		ASTC_8X8_TYPELESS           = 161,
-		ASTC_8X8_UNORM              = 162,
-		ASTC_8X8_UNORM_SRGB         = 163,
-
-		ASTC_10X5_TYPELESS          = 165,
-		ASTC_10X5_UNORM             = 166,
-		ASTC_10X5_UNORM_SRGB        = 167,
-
-		ASTC_10X6_TYPELESS          = 169,
-		ASTC_10X6_UNORM             = 170,
-		ASTC_10X6_UNORM_SRGB        = 171,
-
-		ASTC_10X8_TYPELESS          = 173,
-		ASTC_10X8_UNORM             = 174,
-		ASTC_10X8_UNORM_SRGB        = 175,
-
-		ASTC_10X10_TYPELESS         = 177,
-		ASTC_10X10_UNORM            = 178,
-		ASTC_10X10_UNORM_SRGB       = 179,
-
-		ASTC_12X10_TYPELESS         = 181,
-		ASTC_12X10_UNORM            = 182,
-		ASTC_12X10_UNORM_SRGB       = 183,
-
-		ASTC_12X12_TYPELESS         = 185,
-		ASTC_12X12_UNORM            = 186,
-		ASTC_12X12_UNORM_SRGB       = 187,
 
 		FORCE_UINT                  = 0xffffffff
 	};
@@ -378,8 +321,7 @@ namespace ddspp
 	inline ddspp_constexpr bool is_compressed(DXGIFormat format)
 	{
 		return (format >= BC1_UNORM && format <= BC5_SNORM) || 
-		       (format >= BC6H_TYPELESS && format <= BC7_UNORM_SRGB) || 
-		       (format >= ASTC_4X4_TYPELESS && format <= ASTC_12X12_UNORM_SRGB);
+		       (format >= BC6H_TYPELESS && format <= BC7_UNORM_SRGB);
 	}
 
 	inline ddspp_constexpr bool is_srgb(DXGIFormat format)
@@ -393,20 +335,6 @@ namespace ddspp
 			case B8G8R8A8_UNORM_SRGB:
 			case B8G8R8X8_UNORM_SRGB:
 			case BC7_UNORM_SRGB:
-			case ASTC_4X4_UNORM_SRGB:
-			case ASTC_5X4_UNORM_SRGB:
-			case ASTC_5X5_UNORM_SRGB:
-			case ASTC_6X5_UNORM_SRGB:
-			case ASTC_6X6_UNORM_SRGB:
-			case ASTC_8X5_UNORM_SRGB:
-			case ASTC_8X6_UNORM_SRGB:
-			case ASTC_8X8_UNORM_SRGB:
-			case ASTC_10X5_UNORM_SRGB:
-			case ASTC_10X6_UNORM_SRGB:
-			case ASTC_10X8_UNORM_SRGB:
-			case ASTC_10X10_UNORM_SRGB:
-			case ASTC_12X10_UNORM_SRGB:
-			case ASTC_12X12_UNORM_SRGB:
 				return true;
 			default:
 				return false;
@@ -415,11 +343,6 @@ namespace ddspp
 
 	inline ddspp_constexpr unsigned int get_bits_per_pixel_or_block(DXGIFormat format)
 	{
-		if(format >= ASTC_4X4_TYPELESS && format <= ASTC_12X12_UNORM_SRGB)
-		{
-			return 128; // All ASTC blocks are the same size
-		}
-
 		switch(format)
 		{
 			case R1_UNORM:
@@ -532,65 +455,8 @@ namespace ddspp
 			case BC6H_SF16:
 			case BC7_UNORM:
 			case BC7_UNORM_SRGB:
-			case ASTC_4X4_TYPELESS:
-			case ASTC_4X4_UNORM:
-			case ASTC_4X4_UNORM_SRGB:
 				blockWidth = 4; blockHeight = 4;
 				break;
-			case ASTC_5X4_TYPELESS:
-			case ASTC_5X4_UNORM:
-			case ASTC_5X4_UNORM_SRGB:
-				blockWidth = 5; blockHeight = 4;
-				break;
-			case ASTC_5X5_TYPELESS:
-			case ASTC_5X5_UNORM:
-			case ASTC_5X5_UNORM_SRGB:
-				blockWidth = 5; blockHeight = 5;
-				break;
-			case ASTC_6X5_TYPELESS:
-			case ASTC_6X5_UNORM:
-			case ASTC_6X5_UNORM_SRGB:
-				blockWidth = 6; blockHeight = 5;
-			case ASTC_6X6_TYPELESS:
-			case ASTC_6X6_UNORM:
-			case ASTC_6X6_UNORM_SRGB:
-				blockWidth = 6; blockHeight = 6;
-			case ASTC_8X5_TYPELESS:
-			case ASTC_8X5_UNORM:
-			case ASTC_8X5_UNORM_SRGB:
-				blockWidth = 8; blockHeight = 5;
-			case ASTC_8X6_TYPELESS:
-			case ASTC_8X6_UNORM:
-			case ASTC_8X6_UNORM_SRGB:
-				blockWidth = 8; blockHeight = 6;
-			case ASTC_8X8_TYPELESS:
-			case ASTC_8X8_UNORM:
-			case ASTC_8X8_UNORM_SRGB:
-				blockWidth = 8; blockHeight = 8;
-			case ASTC_10X5_TYPELESS:
-			case ASTC_10X5_UNORM:
-			case ASTC_10X5_UNORM_SRGB:
-				blockWidth = 10; blockHeight = 5;
-			case ASTC_10X6_TYPELESS:
-			case ASTC_10X6_UNORM:
-			case ASTC_10X6_UNORM_SRGB:
-				blockWidth = 10; blockHeight = 6;
-			case ASTC_10X8_TYPELESS:
-			case ASTC_10X8_UNORM:
-			case ASTC_10X8_UNORM_SRGB:
-				blockWidth = 10; blockHeight = 8;
-			case ASTC_10X10_TYPELESS:
-			case ASTC_10X10_UNORM:
-			case ASTC_10X10_UNORM_SRGB:
-				blockWidth = 10; blockHeight = 10;
-			case ASTC_12X10_TYPELESS:
-			case ASTC_12X10_UNORM:
-			case ASTC_12X10_UNORM_SRGB:
-				blockWidth = 12; blockHeight = 10;
-			case ASTC_12X12_TYPELESS:
-			case ASTC_12X12_UNORM:
-			case ASTC_12X12_UNORM_SRGB:
-				blockWidth = 12; blockHeight = 12;
 			default:
 				blockWidth = 1; blockHeight = 1;
 				break;
