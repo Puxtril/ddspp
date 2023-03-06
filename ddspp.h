@@ -100,6 +100,8 @@ namespace ddspp
 
 		// Values taken from DirectXTex repository
 		// https://github.com/microsoft/DirectXTex/blob/b1001d15b387ba2292e2e040f38ae9e1f43baf15/DirectXTex/DDS.h
+		// TODO: make a custom list of these that actually map to a DXGI_FORMAT 
+		//   ...and have more obvious names.
 		static ddspp_constexpr PixelFormat PF_A8R8G8B8  = {32, DDS_RGBA,       0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000};
 		static ddspp_constexpr PixelFormat PF_X8R8G8B8  = {32, DDS_RGB,        0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000};
 		static ddspp_constexpr PixelFormat PF_A8B8G8R8  = {32, DDS_RGBA,       0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000};
@@ -117,6 +119,9 @@ namespace ddspp
 		static ddspp_constexpr PixelFormat PF_V8U8      = {32, DDS_BUMPDUDV,   0, 16, 0x00ff,     0xff00,     0x0000,     0x0000    };
 		static ddspp_constexpr PixelFormat PF_Q8W8V8U8  = {32, DDS_BUMPDUDV,   0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000};
 		static ddspp_constexpr PixelFormat PF_V16U16    = {32, DDS_BUMPDUDV,   0, 32, 0x0000ffff, 0xffff0000, 0x00000000, 0x00000000};
+
+		// Custom-created values
+		static ddspp_constexpr PixelFormat PF_B8G8R8A8 = { 32, DDS_RGBA,       0, 32, 0x0000ff00, 0x00ff0000, 0xff000000, 0x000000ff };
 
 		inline ddspp_constexpr bool is_rgba_mask(const PixelFormat& ddspf, unsigned int rmask, unsigned int gmask, unsigned int bmask, unsigned int amask)
 		{
@@ -388,7 +393,7 @@ namespace ddspp
 		case R16G16_SNORM:
 			return PF_V16U16;
 		case B8G8R8A8_UNORM:
-			return PF_A8R8G8B8;
+			return PF_B8G8R8A8;
 		case B8G8R8X8_UNORM:
 			return PF_X8R8G8B8;
 		case B4G4R4A4_UNORM:
