@@ -137,13 +137,13 @@ namespace ddspp
 	using namespace internal;
 
 	// https://docs.microsoft.com/en-us/windows/desktop/api/d3d11/ne-d3d11-d3d11_resource_dimension
-	enum DXGIResourceDimension : unsigned char
+	enum DXGIResourceDimension : unsigned int
 	{
-		DXGI_Unknown,
-		DXGI_Buffer,
-		DXGI_Texture1D,
-		DXGI_Texture2D,
-		DXGI_Texture3D
+		DXGI_Unknown = 0,
+		DXGI_Buffer = 1,
+		DXGI_Texture1D = 2,
+		DXGI_Texture2D = 3,
+		DXGI_Texture3D = 4
 	};
 
 	// Matches DXGI_FORMAT https://docs.microsoft.com/en-us/windows/desktop/api/dxgiformat/ne-dxgiformat-dxgi_format
