@@ -146,6 +146,15 @@ namespace ddspp
 		DXGI_Texture3D = 4
 	};
 
+	enum DXGIMiscFlags2 : unsigned int
+	{
+		DDS_ALPHA_MODE_UNKNOWN = 0,
+		DDS_ALPHA_MODE_STRAIGHT = 1,
+		DDS_ALPHA_MODE_PREMULTIPLIED = 2,
+		DDS_ALPHA_MODE_OPAQUE = 3,
+		DDS_ALPHA_MODE_CUSTOM = 4
+	};
+
 	// Matches DXGI_FORMAT https://docs.microsoft.com/en-us/windows/desktop/api/dxgiformat/ne-dxgiformat-dxgi_format
 	enum DXGIFormat : unsigned int
 	{
@@ -295,7 +304,7 @@ namespace ddspp
 		DXGIResourceDimension resourceDimension;
 		unsigned int miscFlag;
 		unsigned int arraySize;
-		unsigned int reserved;
+		unsigned int miscFlags2;
 	};
 
 	static_assert(sizeof(HeaderDXT10) == 20, "DDS DX10 Extended Header size mismatch");
@@ -402,6 +411,63 @@ namespace ddspp
 			return PF_YUY2;
 		default:
 			return PF_DX10;
+		}
+	}
+
+	// Ripped straight from DirectXTex's source code
+	// File `DirectXTexUtil.cpp` function `HasAlpha`
+	inline ddspp_constexpr bool hasAlpha(DXGIFormat fmt)
+	{
+		switch (static_cast<int>(fmt))
+		{
+		case R32G32B32A32_TYPELESS:
+		case R32G32B32A32_FLOAT:
+		case R32G32B32A32_UINT:
+		case R32G32B32A32_SINT:
+		case R16G16B16A16_TYPELESS:
+		case R16G16B16A16_FLOAT:
+		case R16G16B16A16_UNORM:
+		case R16G16B16A16_UINT:
+		case R16G16B16A16_SNORM:
+		case R16G16B16A16_SINT:
+		case R10G10B10A2_TYPELESS:
+		case R10G10B10A2_UNORM:
+		case R10G10B10A2_UINT:
+		case R8G8B8A8_TYPELESS:
+		case R8G8B8A8_UNORM:
+		case R8G8B8A8_UNORM_SRGB:
+		case R8G8B8A8_UINT:
+		case R8G8B8A8_SNORM:
+		case R8G8B8A8_SINT:
+		case A8_UNORM:
+		case BC1_TYPELESS:
+		case BC1_UNORM:
+		case BC1_UNORM_SRGB:
+		case BC2_TYPELESS:
+		case BC2_UNORM:
+		case BC2_UNORM_SRGB:
+		case BC3_TYPELESS:
+		case BC3_UNORM:
+		case BC3_UNORM_SRGB:
+		case B5G5R5A1_UNORM:
+		case B8G8R8A8_UNORM:
+		case R10G10B10_XR_BIAS_A2_UNORM:
+		case B8G8R8A8_TYPELESS:
+		case B8G8R8A8_UNORM_SRGB:
+		case BC7_TYPELESS:
+		case BC7_UNORM:
+		case BC7_UNORM_SRGB:
+		case AYUV:
+		case Y410:
+		case Y416:
+		case AI44:
+		case IA44:
+		case A8P8:
+		case B4G4R4A4_UNORM:
+			return true;
+
+		default:
+			return false;
 		}
 	}
 
@@ -955,7 +1021,12 @@ namespace ddspp
 				header.caps2 |= DDS_HEADER_CAPS2_VOLUME;
 			}
 
-			// dxt10Header.miscFlag TODO Alpha Mode
+			// Most compatable option
+			if (hasAlpha(format))
+			{
+				dxt10Header.miscFlags2 = DXGIMiscFlags2::DDS_ALPHA_MODE_STRAIGHT;
+			}
+
 			return true;
 		}
 		return false;
